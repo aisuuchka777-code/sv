@@ -1,0 +1,1334 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7f1eb">
+<title>Мерген-Херел & Ай-Кыс | Wedding Invitation</title>
+
+<!-- ШРИФТЫ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<!-- АНИМАЦИИ -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+:root {
+  --cream: #f8f3ed;
+  --paper: #fffdf9;
+  --rose: #d9b9b4;
+  --rose-light: #eee0dc;
+  --wine: #683b43;
+  --gold: #b59a70;
+  --ink: #453b38;
+  --muted: #93847d;
+  --line: #e7dcd2;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+body.locked {
+  overflow: hidden;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================
+   ПЕРВЫЙ СЛОЙ — КОНВЕРТ
+========================= */
+
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background:
+    radial-gradient(ellipse at 50% 42%, #fffdf9 0%, #f5ece5 75%, #eadbd2 100%);
+  transition: opacity 1.2s ease, visibility 1.2s ease;
+}
+
+#intro.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.intro-caption {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 48px;
+}
+
+.envelope-wrap {
+  position: relative;
+  width: min(82vw, 390px);
+  height: min(57vw, 270px);
+  perspective: 1100px;
+  filter: drop-shadow(0 25px 25px rgba(83, 53, 48, .14));
+}
+
+.envelope {
+  position: absolute;
+  inset: 0;
+  background: #ead5d0;
+  border-radius: 3px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  background: #d8b7b0;
+  border-radius: 3px;
+}
+
+.envelope-card {
+  position: absolute;
+  z-index: 2;
+  width: 84%;
+  height: 90%;
+  left: 8%;
+  top: 5%;
+  padding: 22px 10px;
+  background: var(--paper);
+  border: 1px solid #d6c09d;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 1.3s cubic-bezier(.2,.7,.2,1);
+  transition-delay: .3s;
+}
+
+.envelope-card .small {
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.envelope-card .names {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(30px, 8vw, 47px);
+  color: var(--wine);
+  margin: 12px 0;
+}
+
+.envelope-card .date {
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 3px;
+  font-size: 13px;
+}
+
+.envelope-front {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  background: #e4c8c1;
+  clip-path: polygon(0 0, 50% 57%, 100% 0, 100% 100%, 0 100%);
+}
+
+.envelope-flap {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  height: 65%;
+  background: #d3aaa4;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top;
+  transform: rotateX(0);
+  transition: transform .9s ease, z-index 0s .45s;
+  backface-visibility: hidden;
+}
+
+.seal {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  top: 58%;
+  transform: translate(-50%, -50%);
+  width: 63px;
+  height: 63px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #a66d70, #703d46 70%);
+  color: #e8d3ac;
+  border: 2px solid #bd8d80;
+  box-shadow: 0 3px 9px rgba(75, 38, 42, .25);
+  display: grid;
+  place-items: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  letter-spacing: -1px;
+}
+
+.envelope.open .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.envelope.open .envelope-card {
+  transform: translateY(-95%) scale(1.05);
+}
+
+.envelope.open .seal {
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.envelope.open .envelope-front {
+  transition: opacity .6s .9s;
+  opacity: .25;
+}
+
+.tap-hint {
+  margin-top: 58px;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: .45; }
+  50% { opacity: 1; }
+}
+
+/* =========================
+   ВТОРОЙ СЛОЙ — КАРТОЧКА
+========================= */
+
+#opening-card {
+  position: fixed;
+  z-index: 1001;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(248,243,237,.97);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s, visibility 1s;
+}
+
+#opening-card.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.invitation-paper {
+  position: relative;
+  width: min(86%, 410px);
+  min-height: 500px;
+  background: var(--paper);
+  border: 1px solid var(--gold);
+  outline: 1px solid rgba(181,154,112,.3);
+  outline-offset: 7px;
+  padding: 65px 22px;
+  text-align: center;
+  box-shadow: 0 25px 70px rgba(80,50,40,.1);
+  transform: translateY(45px) scale(.92);
+  transition: transform 1s cubic-bezier(.2,.8,.2,1);
+}
+
+#opening-card.show .invitation-paper {
+  transform: translateY(0) scale(1);
+}
+
+.paper-top {
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.paper-flower {
+  color: var(--rose);
+  font-size: 31px;
+  margin: 24px 0;
+}
+
+.paper-names {
+  font-family: 'Great Vibes', cursive;
+  color: var(--wine);
+  font-size: clamp(42px, 11vw, 62px);
+  line-height: 1.3;
+}
+
+.paper-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  letter-spacing: 4px;
+  margin: 25px 0;
+}
+
+.paper-message {
+  color: var(--muted);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.enter-button {
+  margin-top: 34px;
+  padding: 14px 29px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--wine);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  transition: .3s;
+}
+
+.enter-button:hover {
+  background: var(--wine);
+  color: white;
+  border-color: var(--wine);
+}
+
+/* =========================
+   ОСНОВНОЙ САЙТ
+========================= */
+
+#main-site {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.2s ease;
+}
+
+#main-site.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.section {
+  padding: 105px 22px;
+  text-align: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+}
+
+.eyebrow {
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+
+h1, h2, h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+}
+
+.section-title {
+  color: var(--wine);
+  font-size: clamp(38px, 7vw, 57px);
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.ornament {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  color: var(--gold);
+  margin: 25px auto;
+  font-size: 19px;
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  width: 60px;
+  height: 1px;
+  background: var(--gold);
+  opacity: .6;
+}
+
+/* HERO */
+
+.hero {
+  min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 85px 20px;
+  background:
+    linear-gradient(rgba(248,243,237,.78), rgba(248,243,237,.87)),
+    radial-gradient(ellipse at 50% 40%, #e6d3c9, #f8f3ed 70%);
+}
+
+.hero::before,
+.hero::after {
+  content: '✿';
+  position: absolute;
+  color: rgba(181,154,112,.15);
+  font-size: 200px;
+  font-family: serif;
+  pointer-events: none;
+}
+
+.hero::before {
+  top: 5%;
+  left: -60px;
+}
+
+.hero::after {
+  bottom: 0;
+  right: -60px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.hero-small {
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-family: 'Great Vibes', cursive;
+  color: var(--wine);
+  font-size: clamp(55px, 12vw, 105px);
+  line-height: 1.25;
+  margin: 30px 0 8px;
+}
+
+.hero-ampersand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  color: var(--gold);
+  font-style: italic;
+}
+
+.hero-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 4vw, 27px);
+  letter-spacing: 5px;
+  color: var(--ink);
+  margin-top: 24px;
+}
+
+.hero-place {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-top: 13px;
+  text-transform: uppercase;
+}
+
+.scroll-note {
+  position: absolute;
+  bottom: 25px;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--muted);
+}
+
+/* ОБРАЩЕНИЕ */
+
+.greeting {
+  background: var(--paper);
+}
+
+.quote {
+  border: 1px solid var(--line);
+  padding: 45px 25px;
+  max-width: 700px;
+  margin: 35px auto 0;
+  position: relative;
+}
+
+.quote::before {
+  content: '❝';
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--paper);
+  padding: 0 15px;
+  color: var(--gold);
+  font-family: Georgia, serif;
+  font-size: 40px;
+}
+
+.quote-tu {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(23px, 5vw, 31px);
+  color: var(--wine);
+  line-height: 1.45;
+}
+
+.quote-ru {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.9;
+  margin-top: 20px;
+}
+
+/* РАСПИСАНИЕ */
+
+.timeline-section {
+  background: #f3eae3;
+}
+
+.timeline {
+  max-width: 590px;
+  margin: 50px auto 0;
+  text-align: left;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 82px;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: #cbb49b;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 65px 1fr;
+  gap: 35px;
+  position: relative;
+  padding-bottom: 35px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 77px;
+  top: 7px;
+  width: 10px;
+  height: 10px;
+  background: var(--wine);
+  border: 3px solid #f3eae3;
+  border-radius: 50%;
+  box-sizing: content-box;
+}
+
+.timeline-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--wine);
+  font-weight: 600;
+}
+
+.timeline-event h3 {
+  font-size: 25px;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+
+.timeline-event p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ДЕТАЛИ */
+
+.details {
+  background: var(--paper);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 45px;
+}
+
+.detail-card {
+  padding: 32px 20px;
+  border: 1px solid var(--line);
+  background: #fffefa;
+}
+
+.detail-icon {
+  font-size: 27px;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.detail-card h3 {
+  font-size: 26px;
+  color: var(--wine);
+  margin-bottom: 15px;
+}
+
+.detail-card p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+.palette {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.palette span {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+/* МЕСТО */
+
+.location {
+  background: #f3eae3;
+}
+
+.address {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 27px;
+  color: var(--wine);
+  line-height: 1.5;
+  margin: 25px auto;
+}
+
+.map-card {
+  margin: 35px auto 0;
+  max-width: 650px;
+  min-height: 230px;
+  background:
+    linear-gradient(rgba(81,57,52,.18),rgba(81,57,52,.18)),
+    repeating-linear-gradient(45deg,#e9dcd1 0px,#e9dcd1 2px,#eee5dc 2px,#eee5dc 15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  border: 1px solid #e1d0c3;
+}
+
+.map-inner {
+  background: rgba(255,253,249,.92);
+  padding: 27px;
+  max-width: 340px;
+  width: 100%;
+}
+
+.map-inner h3 {
+  font-size: 30px;
+  color: var(--wine);
+}
+
+.map-inner p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 10px 0 18px;
+}
+
+.map-link {
+  display: inline-block;
+  padding: 12px 20px;
+  background: var(--wine);
+  color: white;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* RSVP */
+
+.rsvp {
+  background: var(--paper);
+}
+
+.rsvp-form {
+  max-width: 520px;
+  margin: 40px auto 0;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 28px;
+}
+
+.form-group label {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #d8c8bc;
+  background: transparent;
+  padding: 12px 4px;
+  outline: none;
+  color: var(--ink);
+  font-size: 14px;
+  border-radius: 0;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--wine);
+}
+
+.submit-button {
+  width: 100%;
+  padding: 17px;
+  background: var(--wine);
+  color: white;
+  border: 1px solid var(--wine);
+  letter-spacing: 3px;
+  font-size: 10px;
+  text-transform: uppercase;
+  transition: .3s;
+}
+
+.submit-button:hover {
+  background: transparent;
+  color: var(--wine);
+}
+
+#form-message {
+  display: none;
+  text-align: center;
+  color: var(--wine);
+  margin-top: 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+}
+
+/* FOOTER */
+
+footer {
+  background: #56383d;
+  color: #f7eee6;
+  text-align: center;
+  padding: 65px 20px;
+}
+
+.footer-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: 48px;
+  color: #ead6c4;
+}
+
+.footer-date {
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 4px;
+  margin: 20px 0;
+}
+
+.footer-love {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  margin: 25px 0;
+}
+
+.footer-contacts {
+  font-size: 11px;
+  line-height: 2.2;
+  color: #d8c4b9;
+}
+
+.footer-contacts a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.download-button {
+  margin-top: 25px;
+  padding: 12px 24px;
+  border: 1px solid #c7a98d;
+  color: #f5e6d9;
+  background: transparent;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: .65;
+  cursor: not-allowed;
+}
+
+/* МУЗЫКА */
+
+.music-button {
+  position: fixed;
+  z-index: 900;
+  right: 20px;
+  bottom: 20px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  background: rgba(255,253,249,.94);
+  color: var(--wine);
+  font-size: 19px;
+  box-shadow: 0 5px 20px rgba(0,0,0,.08);
+  display: none;
+}
+
+.music-button.active {
+  display: grid;
+  place-items: center;
+}
+
+@media (max-width: 650px) {
+  .section {
+    padding: 78px 20px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .detail-card {
+    padding: 28px 22px;
+  }
+
+  .timeline {
+    max-width: 390px;
+  }
+
+  .timeline-item {
+    gap: 27px;
+  }
+
+  .timeline::before {
+    left: 72px;
+  }
+
+  .timeline-item::before {
+    left: 67px;
+  }
+
+  .timeline-item {
+    grid-template-columns: 55px 1fr;
+  }
+
+  .timeline-event h3 {
+    font-size: 23px;
+  }
+
+  .invitation-paper {
+    min-height: 470px;
+    padding: 55px 17px;
+  }
+
+  .intro-caption {
+    margin-bottom: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+
+<body class="locked">
+
+<!-- МУЗЫКА
+     Скачай понравившийся трек и положи его рядом с index.html
+     под именем music.mp3.
+-->
+<audio id="bg-music" loop preload="none">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- СЛОЙ 0: КОНВЕРТ -->
+<div id="intro">
+  <div class="intro-caption">A special invitation</div>
+
+  <div class="envelope-wrap">
+    <div class="envelope" id="envelope" role="button"
+         tabindex="0" aria-label="Открыть свадебное приглашение">
+
+      <div class="envelope-back"></div>
+
+      <div class="envelope-card">
+        <div class="small">Wedding invitation</div>
+        <div class="names">Мерген-Херел & Ай-Кыс</div>
+        <div class="date">14 · 11 · 2025</div>
+      </div>
+
+      <div class="envelope-front"></div>
+      <div class="envelope-flap"></div>
+      <div class="seal">МХ & АК</div>
+    </div>
+  </div>
+
+  <div class="tap-hint">Нажмите, чтобы открыть приглашение</div>
+</div>
+
+<!-- СЛОЙ 1: ОТКРЫТАЯ КАРТОЧКА -->
+<div id="opening-card">
+  <div class="invitation-paper">
+    <div class="paper-top">Together with love</div>
+    <div class="paper-flower">✿</div>
+    <div class="paper-names">
+      Мерген-Херел<br>&<br>Ай-Кыс
+    </div>
+    <div class="paper-date">14 · NOVEMBER · 2025</div>
+    <p class="paper-message">
+      С огромной радостью приглашаем вас<br>
+      разделить с нами самый счастливый день.
+    </p>
+    <button class="enter-button" id="enter-button">
+      Открыть приглашение
+    </button>
+  </div>
+</div>
+
+<!-- СЛОЙ 2: ОСНОВНОЙ САЙТ -->
+<main id="main-site">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content" data-aos="fade-up">
+      <div class="hero-small">The beginning of forever</div>
+
+      <h1>
+        Мерген-Херел
+        <div class="hero-ampersand">&</div>
+        Ай-Кыс
+      </h1>
+
+      <div class="ornament">✿</div>
+
+      <div class="hero-date">14 · 11 · 2025</div>
+      <div class="hero-place">NOVA · Кызыл</div>
+    </div>
+    <div class="scroll-note">SCROLL TO EXPLORE ↓</div>
+  </section>
+
+  <!-- ОБРАЩЕНИЕ -->
+  <section class="section greeting">
+    <div class="container" data-aos="fade-up">
+      <div class="eyebrow">Dear family & friends</div>
+      <h2 class="section-title">Дорогие наши!</h2>
+      <div class="ornament">✿</div>
+
+      <div class="quote">
+        <p class="quote-tu">
+          Чараш байырлалывыс — кудавысче чалап тур бис!
+        </p>
+
+        <p class="quote-ru">
+          С радостью и любовью приглашаем вас разделить
+          с нами один из самых важных и счастливых дней
+          нашей жизни — день рождения нашей семьи.
+          Будем счастливы видеть вас рядом!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- РАСПИСАНИЕ -->
+  <section class="section timeline-section">
+    <div class="container" data-aos="fade-up">
+      <div class="eyebrow">Save the moments</div>
+      <h2 class="section-title">План дня</h2>
+      <p class="quote-ru">
+        Каждый момент этого дня наполнен особенным смыслом.
+      </p>
+
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-time">08:00</div>
+          <div class="timeline-event">
+            <h3>Утро невесты</h3>
+            <p>Начало самого волнительного и красивого дня.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">11:00</div>
+          <div class="timeline-event">
+            <h3>Выкуп</h3>
+            <p>Традиции, улыбки и счастливые моменты.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">16:00</div>
+          <div class="timeline-event">
+            <h3>Начало торжества</h3>
+            <p>Встречаемся, чтобы отпраздновать рождение семьи.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">17:00</div>
+          <div class="timeline-event">
+            <h3>Фото и кортеж</h3>
+            <p>Сохраняем самые тёплые воспоминания.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">21:00</div>
+          <div class="timeline-event">
+            <h3>Свадебный торт</h3>
+            <p>Сладкий момент нашего вечера.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">22:00</div>
+          <div class="timeline-event">
+            <h3>Фейерверк</h3>
+            <p>Яркое завершение незабываемого дня.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ДЕТАЛИ -->
+  <section class="section details">
+    <div class="container" data-aos="fade-up">
+      <div class="eyebrow">A few important details</div>
+      <h2 class="section-title">Детали торжества</h2>
+      <div class="ornament">✿</div>
+
+      <div class="details-grid">
+
+        <div class="detail-card">
+          <div class="detail-icon">♡</div>
+          <h3>Дресс-код</h3>
+          <p>
+            Будем рады, если вы поддержите
+            нежную и элегантную атмосферу
+            нашего праздника.
+          </p>
+
+          <div class="palette">
+            <span style="background:#e9d6d0"></span>
+            <span style="background:#cda9a4"></span>
+            <span style="background:#b99a7b"></span>
+            <span style="background:#eee5d9"></span>
+            <span style="background:#70464a"></span>
+            <span style="background:#898477"></span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon">✿</div>
+          <h3>Дети</h3>
+          <p>
+            Формат торжества не подразумевает
+            присутствия детей. Надеемся
+            на ваше понимание.
+          </p>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon">♡</div>
+          <h3>Подарки</h3>
+          <p>
+            Будем благодарны за вклад
+            в бюджет молодой семьи.
+            Самое главное для нас —
+            ваше присутствие и тепло.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- МЕСТО -->
+  <section class="section location">
+    <div class="container" data-aos="fade-up">
+      <div class="eyebrow">Where to meet</div>
+      <h2 class="section-title">Место встречи</h2>
+      <div class="ornament">✿</div>
+
+      <div class="address">
+        Банкетный зал «NOVA»<br>
+        г. Кызыл, ул. Кечил-оол, 3в
+      </div>
+
+      <div class="map-card">
+        <div class="map-inner">
+          <div class="detail-icon">⌖</div>
+          <h3>NOVA</h3>
+          <p>Будем ждать вас по этому адресу</p>
+
+          <a class="map-link"
+             href="https://yandex.ru/maps/?text=NOVA%2C%20Кызыл%2C%20ул.%20Кечил-оол%2C%203в"
+             target="_blank" rel="noopener">
+            Открыть карту
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RSVP -->
+  <section class="section rsvp">
+    <div class="container" data-aos="fade-up">
+      <div class="eyebrow">We are waiting for you</div>
+      <h2 class="section-title">Анкета гостя</h2>
+      <div class="ornament">✿</div>
+
+      <p class="quote-ru">
+        Пожалуйста, подтвердите своё присутствие.
+        Нам будет очень приятно знать, что вы будете рядом!
+      </p>
+
+      <!--
+        ВАЖНО:
+        Для настоящей отправки ответов подключи Formspree.
+        Создай форму на formspree.io и вставь её endpoint
+        в action вместо пустого значения.
+      -->
+      <form class="rsvp-form" id="rsvp-form">
+
+        <div class="form-group">
+          <label for="guest-name">Ваше имя и фамилия</label>
+          <input type="text" id="guest-name"
+                 name="name" placeholder="Как к вам обращаться?"
+                 required>
+        </div>
+
+        <div class="form-group">
+          <label for="attendance">Сможете ли вы присутствовать?</label>
+          <select id="attendance" name="attendance" required>
+            <option value="" disabled selected>Выберите ответ</option>
+            <option value="Да, с удовольствием!">Да, с удовольствием!</option>
+            <option value="К сожалению, не смогу">К сожалению, не смогу</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="company">Вы придёте...</label>
+          <select id="company" name="company" required>
+            <option value="" disabled selected>Выберите вариант</option>
+            <option value="Один / одна">Один / одна</option>
+            <option value="Парой">Парой</option>
+          </select>
+        </div>
+
+        <button type="submit" class="submit-button">
+          Отправить ответ
+        </button>
+
+        <p id="form-message">
+          Спасибо за ваш ответ! Будем рады вас видеть ♡
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-names">Мерген-Херел & Ай-Кыс</div>
+    <div class="ornament">✿</div>
+    <div class="footer-date">14 · 11 · 2025</div>
+
+    <p class="footer-love">
+      С любовью,<br>
+      Мерген-Херел и Ай-Кыс
+    </p>
+
+    <div class="footer-contacts">
+      По всем вопросам:<br>
+      Сайгал —
+      <a href="tel:+79962630990">8 996 263-09-90</a><br>
+      Аяна —
+      <a href="tel:+79011350365">8 901 135-03-65</a>
+    </div>
+
+    <button class="download-button" type="button" disabled>
+      ♡ Скоро здесь появятся фотографии
+    </button>
+  </footer>
+
+</main>
+
+<!-- КНОПКА МУЗЫКИ -->
+<button class="music-button" id="music-button"
+        type="button" aria-label="Включить или выключить музыку">
+  ♫
+</button>
+
+<!-- AOS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+const envelope = document.getElementById('envelope');
+const intro = document.getElementById('intro');
+const openingCard = document.getElementById('opening-card');
+const mainSite = document.getElementById('main-site');
+const enterButton = document.getElementById('enter-button');
+
+const music = document.getElementById('bg-music');
+const musicButton = document.getElementById('music-button');
+
+let opened = false;
+
+// ОТКРЫТИЕ КОНВЕРТА
+function openEnvelope() {
+  if (opened) return;
+  opened = true;
+
+  envelope.classList.add('open');
+
+  // Музыка запускается после действия пользователя.
+  music.volume = 0.35;
+  music.play().then(() => {
+    musicButton.textContent = '♫';
+  }).catch(() => {
+    musicButton.textContent = '▶';
+  });
+
+  musicButton.classList.add('active');
+
+  // Появление карточки после открытия клапана.
+  setTimeout(() => {
+    openingCard.classList.add('show');
+  }, 1000);
+
+  // Убираем первый слой, оставляя открытую карточку.
+  setTimeout(() => {
+    intro.classList.add('hidden');
+  }, 1900);
+}
+
+envelope.addEventListener('click', openEnvelope);
+
+envelope.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    openEnvelope();
+  }
+});
+
+// ПЕРЕХОД К ОСНОВНОМУ САЙТУ
+enterButton.addEventListener('click', () => {
+  openingCard.classList.remove('show');
+
+  setTimeout(() => {
+    openingCard.style.display = 'none';
+    mainSite.classList.add('visible');
+    document.body.classList.remove('locked');
+
+    if (window.AOS) {
+      AOS.refresh();
+    }
+  }, 700);
+});
+
+// PLAY / PAUSE
+musicButton.addEventListener('click', () => {
+  if (music.paused) {
+    music.play().then(() => {
+      musicButton.textContent = '♫';
+    }).catch(() => {
+      musicButton.textContent = '▶';
+    });
+  } else {
+    music.pause();
+    musicButton.textContent = '▶';
+  }
+});
+
+// RSVP
+const form = document.getElementById('rsvp-form');
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  /*
+    Для реальной отправки:
+    1. Создай форму на https://formspree.io
+    2. Добавь endpoint в action формы.
+    3. Замени этот демонстрационный обработчик
+       на отправку через fetch(Formspree).
+  */
+
+  document.getElementById('form-message').style.display = 'block';
+  form.querySelector('.submit-button').textContent = 'Ответ принят';
+});
+
+// ИНИЦИАЛИЗАЦИЯ АНИМАЦИЙ
+if (window.AOS) {
+  AOS.init({
+    duration: 900,
+    once: true,
+    offset: 80,
+    easing: 'ease-out-cubic'
+  });
+}
+</script>
+
+</body>
+</html>
